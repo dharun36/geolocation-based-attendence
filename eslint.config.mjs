@@ -21,6 +21,7 @@ const eslintConfig = defineConfig([
         "varsIgnorePattern": "^_"
       }],
       "@typescript-eslint/no-empty-interface": "warn",
+      "@typescript-eslint/no-empty-object-type": "warn",
       "@typescript-eslint/no-require-imports": "warn",
       "react/no-unescaped-entities": "off",
     }

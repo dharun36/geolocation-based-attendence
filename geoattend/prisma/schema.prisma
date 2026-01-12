@@ -1,0 +1,225 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// MULTI-TENANT SAAS SCHEMA
+// ============================================
+
+// Organization - The tenant entity for multi-tenancy
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique // For subdomain or URL-based routing
+  email     String   @unique
+  phone     String?
+  address   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users         User[]
+  locations     Location[]
+  attendances   Attendance[]
+  auditLogs     AuditLog[]
+  leaveRequests LeaveRequest[]
+
+  @@index([slug])
+  @@index([email])
+}
+
+// User - With role-based access control
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  password       String // Hashed with bcryptjs
+  name           String
+  phone          String?
+  employeeId     String? // Optional employee identifier
+  role           UserRole @default(EMPLOYEE)
+  isActive       Boolean  @default(true)
+  profileImage   String?
+  lastLogin      DateTime?
+  emailVerified  DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Multi-tenant relation
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Relations
+  attendances      Attendance[]
+  auditLogs        AuditLog[]
+  leaveRequests    LeaveRequest[]
+  createdLocations Location[]     @relation("CreatedBy")
+
+  @@unique([organizationId, email]) // Prevent duplicate emails within same organization
+  @@index([organizationId])
+  @@index([email])
+  @@index([role])
+}
+
+// User Roles Enum
+enum UserRole {
+  ADMIN    // Full access to organization settings
+  MANAGER  // Can view reports, manage employees
+  EMPLOYEE // Can only check-in/check-out
+}
+
+// Location - Geo-fence configuration
+model Location {
+  id          String   @id @default(cuid())
+  name        String // e.g., "Main Office", "Branch 1"
+  address     String
+  latitude    Float // GPS coordinates
+  longitude   Float
+  radius      Float // In meters - geo-fence radius
+  isActive    Boolean  @default(true)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Multi-tenant relation
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Track who created this location
+  createdById String
+  createdBy   User   @relation("CreatedBy", fields: [createdById], references: [id])
+
+  // Relations
+  attendances Attendance[]
+
+  @@index([organizationId])
+  @@index([isActive])
+}
+
+// Attendance - Core attendance records
+model Attendance {
+  id              String           @id @default(cuid())
+  date            DateTime         @default(now()) @db.Date
+  
+  // Check-in details
+  checkInTime     DateTime?
+  checkInLatitude Float?
+  checkInLongitude Float?
+  checkInAccuracy Float? // GPS accuracy in meters
+  checkInLocationId String?
+  checkInLocation Location?        @relation(fields: [checkInLocationId], references: [id])
+  
+  // Check-out details
+  checkOutTime      DateTime?
+  checkOutLatitude  Float?
+  checkOutLongitude Float?
+  checkOutAccuracy  Float?
+  
+  // Calculated fields
+  status          AttendanceStatus @default(ABSENT)
+  totalHours      Float?           // Calculated hours worked
+  isLate          Boolean          @default(false)
+  lateByMinutes   Int?
+  remarks         String?          // Admin/Manager comments
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Multi-tenant relation
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // User relation
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date, organizationId]) // One attendance record per user per day
+  @@index([organizationId])
+  @@index([userId])
+  @@index([date])
+  @@index([status])
+}
+
+// Attendance Status Enum
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  HALF_DAY
+  LATE
+  ON_LEAVE
+}
+
+// Leave Request - Employee leave management
+model LeaveRequest {
+  id          String            @id @default(cuid())
+  startDate   DateTime          @db.Date
+  endDate     DateTime          @db.Date
+  leaveType   LeaveType
+  reason      String
+  status      LeaveRequestStatus @default(PENDING)
+  approvedBy  String?
+  approvedAt  DateTime?
+  rejectedBy  String?
+  rejectedAt  DateTime?
+  comments    String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Multi-tenant relation
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // User relation
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([status])
+}
+
+enum LeaveType {
+  SICK
+  CASUAL
+  EARNED
+  UNPAID
+}
+
+enum LeaveRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Audit Log - Track all critical actions for compliance
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // e.g., "USER_CREATED", "ATTENDANCE_CHECKED_IN"
+  entityType  String   // e.g., "User", "Attendance"
+  entityId    String
+  oldValues   String?  @db.Text // JSON string of old values
+  newValues   String?  @db.Text // JSON string of new values
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  // Multi-tenant relation
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // User who performed the action
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+}

@@ -1,2 +1,5 @@
-node_modules/
-.env
+# node_modules/
+geoattend/.env
+geoattend/.next/
+
+geoattend/node_modules/

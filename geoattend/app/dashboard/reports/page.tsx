@@ -26,9 +26,9 @@ export default async function ReportsPage() {
 
   // Calculate stats
   const total = attendance.length
-  const present = attendance.filter((a) => a.status === "PRESENT").length
-  const late = attendance.filter((a) => a.status === "LATE").length
-  const absent = attendance.filter((a) => a.status === "ABSENT").length
+  const present = attendance.filter((a: { status: string }) => a.status === "PRESENT").length
+  const late = attendance.filter((a: { status: string }) => a.status === "LATE").length
+  const absent = attendance.filter((a: { status: string }) => a.status === "ABSENT").length
 
   return (
     <div className="space-y-6">
@@ -91,15 +91,15 @@ export default async function ReportsPage() {
                 </tr>
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
-                {attendance.map((record) => (
+                {attendance.map((record: any) => (
                   <tr key={record.id} className="border-b transition-colors hover:bg-muted/50">
                     <td className="p-4 align-middle">{formatDate(record.date)}</td>
                     <td className="p-4 align-middle font-medium">{record.user.name}</td>
                     <td className="p-4 align-middle">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${record.status === 'PRESENT' ? 'bg-green-100 text-green-800' :
-                          record.status === 'LATE' ? 'bg-yellow-100 text-yellow-800' :
-                            record.status === 'ABSENT' ? 'bg-red-100 text-red-800' :
-                              'bg-gray-100 text-gray-800'
+                        record.status === 'LATE' ? 'bg-yellow-100 text-yellow-800' :
+                          record.status === 'ABSENT' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
                         }`}>
                         {record.status}
                       </span>

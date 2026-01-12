@@ -12,10 +12,15 @@ import {
   Settings,
   LogOut
 } from "lucide-react"
-import { UserRole } from "@prisma/client"
+// Define type locally to avoid importing server code in client component
+export enum UserRole {
+  ADMIN = "ADMIN",
+  MANAGER = "MANAGER",
+  EMPLOYEE = "EMPLOYEE"
+}
 
 interface SidebarProps {
-  userRole: UserRole
+  userRole: UserRole | string
   organizationName: string
 }
 
@@ -64,7 +69,7 @@ export function Sidebar({ userRole, organizationName }: SidebarProps) {
 
   // Filter navigation based on user role
   const filteredNavigation = navigation.filter((item) =>
-    item.roles.includes(userRole)
+    item.roles.includes(userRole as UserRole)
   )
 
   return (

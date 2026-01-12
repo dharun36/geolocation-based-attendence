@@ -7,10 +7,8 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-// For Prisma 7 with prisma+postgres:// URL (Prisma Dev/Accelerate)
-// Need to explicitly pass the URL as accelerateUrl
+// For Supabase PostgreSQL - standard connection
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  accelerateUrl: process.env.DATABASE_URL,
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 })
 

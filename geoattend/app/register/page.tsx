@@ -57,7 +57,7 @@ export default function RegisterPage() {
           </div>
           <CardTitle className="text-2xl text-center">Create Organization</CardTitle>
           <CardDescription className="text-center">
-            Set up your organization and admin account
+            Set up your organization and admin account (For new organizations only)
           </CardDescription>
         </CardHeader>
         <form action={handleSubmit}>
@@ -67,6 +67,13 @@ export default function RegisterPage() {
                 <p className="text-sm text-red-800">{error}</p>
               </div>
             )}
+
+            <div className="rounded-md bg-blue-50 p-3 border border-blue-200">
+              <p className="text-sm text-blue-800">
+                <strong>Note:</strong> This page is for creating a new organization.
+                If you're an employee, please contact your admin for login credentials.
+              </p>
+            </div>
 
             {/* Organization Details */}
             <div className="space-y-2">
@@ -154,13 +161,16 @@ export default function RegisterPage() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating account..." : "Create organization"}
+              {loading ? "Creating organization..." : "Create Organization & Admin Account"}
             </Button>
             <p className="text-sm text-center text-gray-600">
               Already have an account?{" "}
               <Link href="/login" className="text-blue-600 hover:underline font-medium">
                 Sign in
               </Link>
+            </p>
+            <p className="text-xs text-center text-gray-500">
+              Employees: Your admin will provide login credentials
             </p>
           </CardFooter>
         </form>

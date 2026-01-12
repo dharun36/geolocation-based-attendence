@@ -63,7 +63,7 @@ export default auth((req) => {
   return response
 })
 
-// Configure which routes middleware should run on
+// Configure which routes proxy should run on
 export const config = {
   matcher: [
     /*

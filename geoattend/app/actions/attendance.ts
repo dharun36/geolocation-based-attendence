@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { calculateDistance, calculateHours, calculateLateMinutes, formatDate } from "@/lib/utils"
 import { z } from "zod"
 import { revalidatePath } from "next/cache"
+import { AttendanceStatus } from "@prisma/client"
 
 // Validation schemas
 const checkInSchema = z.object({
@@ -94,18 +95,20 @@ export async function checkInAction(data: {
       }
     }
 
-    if (!isWithinGeofence) {
+    if (!isWithinGeofence || !nearestLocation) {
       return {
         success: false,
-        error: `You are ${Math.round(minDistance)}m away from the nearest location (${nearestLocation?.name}). You must be within ${nearestLocation?.radius}m to check in.`,
+        error: `You are ${Math.round(minDistance)}m away from the nearest location (${nearestLocation?.name || 'Unknown'}). You must be within ${nearestLocation?.radius || 0}m to check in.`,
       }
     }
 
-    // Check GPS accuracy
-    if (validated.accuracy > 50) {
+    // Check GPS accuracy (relaxed for development - 100000m = 100km for browser testing)
+    // In production, you should set this to 50m for better accuracy
+    const accuracyThreshold = process.env.NODE_ENV === 'development' ? 100000 : 50
+    if (validated.accuracy > accuracyThreshold) {
       return {
         success: false,
-        error: `GPS accuracy is too low (${Math.round(validated.accuracy)}m). Please try again when GPS signal is stronger.`,
+        error: `GPS accuracy is too low (${Math.round(validated.accuracy)}m). Please try again when GPS signal is stronger (required: <${accuracyThreshold}m).`,
       }
     }
 
@@ -115,11 +118,11 @@ export async function checkInAction(data: {
     const isLate = lateMinutes > 0
 
     // Determine status
-    let status = "PRESENT"
+    let status: AttendanceStatus = AttendanceStatus.PRESENT
     if (isLate && lateMinutes > 60) {
-      status = "HALF_DAY" // More than 1 hour late
+      status = AttendanceStatus.HALF_DAY // More than 1 hour late
     } else if (isLate) {
-      status = "LATE"
+      status = AttendanceStatus.LATE
     }
 
     // Create or update attendance record
@@ -244,11 +247,12 @@ export async function checkOutAction(data: {
       }
     }
 
-    // Check GPS accuracy
-    if (validated.accuracy > 50) {
+    // Check GPS accuracy (relaxed for development - 100000m = 100km for browser testing)
+    const accuracyThreshold = process.env.NODE_ENV === 'development' ? 100000 : 50
+    if (validated.accuracy > accuracyThreshold) {
       return {
         success: false,
-        error: `GPS accuracy is too low (${Math.round(validated.accuracy)}m). Please try again when GPS signal is stronger.`,
+        error: `GPS accuracy is too low (${Math.round(validated.accuracy)}m). Please try again when GPS signal is stronger (required: <${accuracyThreshold}m).`,
       }
     }
 

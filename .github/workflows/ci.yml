@@ -30,13 +30,6 @@ jobs:
       - name: Run linter
         run: npm run lint
 
-      - name: Notify Vercel
-        if: always()
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: 'Vercel - geolocation-based-attendence-p5p6: lint'
-          status: ${{ job.status }}
-
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
@@ -59,13 +52,6 @@ jobs:
 
       - name: Run TypeScript check
         run: npx tsc --noEmit
-
-      - name: Notify Vercel
-        if: always()
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: 'Vercel - geolocation-based-attendence-p5p6: type-check'
-          status: ${{ job.status }}
 
   build:
     name: Build
@@ -99,13 +85,6 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Notify Vercel
-        if: always()
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: 'Vercel - geolocation-based-attendence-p5p6: build'
-          status: ${{ job.status }}
-
   validate-env:
     name: Validate Environment
     runs-on: ubuntu-latest
@@ -134,13 +113,6 @@ jobs:
       - name: Validate environment variables
         run: npm run check-env
 
-      - name: Notify Vercel
-        if: always()
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: 'Vercel - geolocation-based-attendence-p5p6: validate-env'
-          status: ${{ job.status }}
-
   prisma-validate:
     name: Validate Prisma Schema
     runs-on: ubuntu-latest
@@ -160,10 +132,3 @@ jobs:
 
       - name: Validate Prisma schema
         run: npx prisma validate
-
-      - name: Notify Vercel
-        if: always()
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: 'Vercel - geolocation-based-attendence-p5p6: prisma-validate'
-          status: ${{ job.status }}

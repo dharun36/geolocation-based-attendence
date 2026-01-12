@@ -13,6 +13,8 @@ datasource db {
 // MULTI-TENANT SAAS SCHEMA
 // ============================================
 
+
+
 // Organization - The tenant entity for multi-tenancy
 model Organization {
   id        String   @id @default(cuid())

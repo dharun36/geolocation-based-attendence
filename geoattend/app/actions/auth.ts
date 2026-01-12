@@ -137,8 +137,8 @@ export async function registerAction(formData: FormData) {
       redirect: false,
     })
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: "Registration successful",
       data: {
         organizationId: result.organization.id,

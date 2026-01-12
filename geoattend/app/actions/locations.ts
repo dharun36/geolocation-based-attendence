@@ -24,7 +24,7 @@ export async function createLocationAction(data: {
 }) {
   try {
     const user = await requireAdmin()
-    
+
     // Validate input
     const validated = locationSchema.parse(data)
 
@@ -76,7 +76,7 @@ export async function updateLocationAction(id: string, data: {
 }) {
   try {
     const user = await requireAdmin()
-    
+
     // Verify location belongs to user's organization
     const existingLocation = await prisma.location.findFirst({
       where: {
@@ -133,7 +133,7 @@ export async function updateLocationAction(id: string, data: {
 export async function deleteLocationAction(id: string) {
   try {
     const user = await requireAdmin()
-    
+
     // Verify location belongs to user's organization
     const location = await prisma.location.findFirst({
       where: {

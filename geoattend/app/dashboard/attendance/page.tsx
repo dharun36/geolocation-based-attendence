@@ -117,12 +117,12 @@ export default async function AttendancePage() {
                       {format(new Date(record.date), "MMM d, yyyy")}
                     </TableCell>
                     <TableCell>
-                      {record.checkInTime 
+                      {record.checkInTime
                         ? format(new Date(record.checkInTime), "h:mm a")
                         : '-'}
                     </TableCell>
                     <TableCell>
-                      {record.checkOutTime 
+                      {record.checkOutTime
                         ? format(new Date(record.checkOutTime), "h:mm a")
                         : '-'}
                     </TableCell>
@@ -133,15 +133,14 @@ export default async function AttendancePage() {
                       {record.totalHours ? `${record.totalHours.toFixed(1)}h` : '-'}
                     </TableCell>
                     <TableCell>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        record.status === 'PRESENT' 
-                          ? 'bg-green-100 text-green-800' 
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${record.status === 'PRESENT'
+                          ? 'bg-green-100 text-green-800'
                           : record.status === 'LATE'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : record.status === 'ABSENT'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : record.status === 'ABSENT'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-gray-100 text-gray-800'
+                        }`}>
                         {record.status}
                       </span>
                     </TableCell>

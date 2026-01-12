@@ -9,7 +9,7 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const user = await getCurrentUser()
-  
+
   const organization = await prisma.organization.findUnique({
     where: { id: user.organizationId },
     select: { name: true },
@@ -17,8 +17,8 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar 
-        userRole={user.role} 
+      <Sidebar
+        userRole={user.role}
         organizationName={organization?.name || "Organization"}
       />
       <div className="flex flex-1 flex-col overflow-hidden">

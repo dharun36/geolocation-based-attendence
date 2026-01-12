@@ -31,14 +31,14 @@ export async function checkInAction(data: {
 }) {
   try {
     const user = await getCurrentUser()
-    
+
     // Validate input
     const validated = checkInSchema.parse(data)
 
     // Check if already checked in today
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     const existingAttendance = await prisma.attendance.findFirst({
       where: {
         userId: user.id,
@@ -48,9 +48,9 @@ export async function checkInAction(data: {
     })
 
     if (existingAttendance?.checkInTime) {
-      return { 
-        success: false, 
-        error: "You have already checked in today" 
+      return {
+        success: false,
+        error: "You have already checked in today"
       }
     }
 
@@ -178,8 +178,8 @@ export async function checkInAction(data: {
 
     return {
       success: true,
-      message: isLate 
-        ? `Checked in successfully (${lateMinutes} minutes late)` 
+      message: isLate
+        ? `Checked in successfully (${lateMinutes} minutes late)`
         : "Checked in successfully",
       data: {
         checkInTime,
@@ -207,14 +207,14 @@ export async function checkOutAction(data: {
 }) {
   try {
     const user = await getCurrentUser()
-    
+
     // Validate input
     const validated = checkOutSchema.parse(data)
 
     // Get today's attendance
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     const attendance = await prisma.attendance.findFirst({
       where: {
         userId: user.id,
@@ -224,23 +224,23 @@ export async function checkOutAction(data: {
     })
 
     if (!attendance) {
-      return { 
-        success: false, 
-        error: "You haven't checked in today" 
+      return {
+        success: false,
+        error: "You haven't checked in today"
       }
     }
 
     if (!attendance.checkInTime) {
-      return { 
-        success: false, 
-        error: "You haven't checked in today" 
+      return {
+        success: false,
+        error: "You haven't checked in today"
       }
     }
 
     if (attendance.checkOutTime) {
-      return { 
-        success: false, 
-        error: "You have already checked out today" 
+      return {
+        success: false,
+        error: "You have already checked out today"
       }
     }
 
@@ -308,10 +308,10 @@ export async function checkOutAction(data: {
 export async function getTodayAttendanceAction() {
   try {
     const user = await getCurrentUser()
-    
+
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     const attendance = await prisma.attendance.findFirst({
       where: {
         userId: user.id,

@@ -8,11 +8,11 @@ import { redirect } from "next/navigation"
  */
 export async function getCurrentUser() {
   const session = await auth()
-  
+
   if (!session?.user) {
     redirect("/login")
   }
-  
+
   return session.user
 }
 
@@ -28,11 +28,11 @@ export function hasRole(userRole: UserRole, requiredRoles: UserRole[]): boolean 
  */
 export async function requireRole(roles: UserRole[]) {
   const user = await getCurrentUser()
-  
+
   if (!hasRole(user.role, roles)) {
     redirect("/dashboard")
   }
-  
+
   return user
 }
 
@@ -55,10 +55,10 @@ export async function requireAdminOrManager() {
  */
 export async function verifyOrganizationAccess(organizationId: string) {
   const user = await getCurrentUser()
-  
+
   if (user.organizationId !== organizationId) {
     throw new Error("Unauthorized: Access denied to this organization")
   }
-  
+
   return user
 }

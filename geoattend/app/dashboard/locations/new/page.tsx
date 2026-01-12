@@ -188,7 +188,7 @@ export default function NewLocationPage() {
                 <li>Paste here</li>
               </ol>
             </div>
-            
+
             <div className="border-t pt-4">
               <h4 className="font-medium mb-2">Tips:</h4>
               <ul className="list-disc list-inside space-y-1 text-gray-600">

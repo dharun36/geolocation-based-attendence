@@ -75,7 +75,7 @@ async function getRecentAttendance(organizationId: string, limit = 10) {
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
-  
+
   const [stats, recentAttendance] = await Promise.all([
     getDashboardStats(user.organizationId),
     getRecentAttendance(user.organizationId),
@@ -173,16 +173,16 @@ export default async function DashboardPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Attendance Rate</span>
                 <span className="text-lg font-bold text-green-600">
-                  {stats.totalEmployees > 0 
-                    ? Math.round(((stats.presentToday + stats.lateToday) / stats.totalEmployees) * 100) 
+                  {stats.totalEmployees > 0
+                    ? Math.round(((stats.presentToday + stats.lateToday) / stats.totalEmployees) * 100)
                     : 0}%
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">On-Time Rate</span>
                 <span className="text-lg font-bold text-blue-600">
-                  {stats.totalEmployees > 0 
-                    ? Math.round((stats.presentToday / stats.totalEmployees) * 100) 
+                  {stats.totalEmployees > 0
+                    ? Math.round((stats.presentToday / stats.totalEmployees) * 100)
                     : 0}%
                 </span>
               </div>
@@ -226,7 +226,7 @@ export default async function DashboardPage() {
                     </TableCell>
                     <TableCell>{attendance.user.employeeId || '-'}</TableCell>
                     <TableCell>
-                      {attendance.checkInTime 
+                      {attendance.checkInTime
                         ? format(new Date(attendance.checkInTime), "h:mm a")
                         : '-'}
                     </TableCell>
@@ -234,15 +234,14 @@ export default async function DashboardPage() {
                       {attendance.checkInLocation?.name || '-'}
                     </TableCell>
                     <TableCell>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        attendance.status === 'PRESENT' 
-                          ? 'bg-green-100 text-green-800' 
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${attendance.status === 'PRESENT'
+                          ? 'bg-green-100 text-green-800'
                           : attendance.status === 'LATE'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : attendance.status === 'ABSENT'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : attendance.status === 'ABSENT'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-gray-100 text-gray-800'
+                        }`}>
                         {attendance.status}
                       </span>
                     </TableCell>

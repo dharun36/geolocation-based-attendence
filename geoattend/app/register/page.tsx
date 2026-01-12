@@ -67,7 +67,7 @@ export default function RegisterPage() {
                 <p className="text-sm text-red-800">{error}</p>
               </div>
             )}
-            
+
             {/* Organization Details */}
             <div className="space-y-2">
               <Label htmlFor="organizationName">Organization Name</Label>
@@ -100,7 +100,7 @@ export default function RegisterPage() {
             {/* Admin User Details */}
             <div className="border-t pt-4 mt-4">
               <p className="text-sm font-medium text-gray-700 mb-3">Admin Account</p>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>

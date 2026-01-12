@@ -1,0 +1,24 @@
+# Local environment
+.env
+.env*.local
+
+# Development files
+node_modules
+.next
+
+# Database
+prisma/migrations
+*.db
+*.db-journal
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage
+
+# Misc
+.DS_Store
+*.pem

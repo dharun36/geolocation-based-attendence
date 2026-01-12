@@ -2,6 +2,27 @@
 
 A production-ready SaaS-level attendance management system built with Next.js 15, featuring GPS-based check-in/check-out, geo-fencing, and multi-tenant architecture.
 
+## 🚀 Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone)
+
+**📖 Full deployment guide:** See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md)
+
+### Quick Steps:
+1. Push code to GitHub/GitLab
+2. Import project in Vercel
+3. Add environment variables (see below)
+4. Deploy!
+
+### Required Environment Variables for Vercel:
+```bash
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:6543/DB?pgbouncer=true
+DIRECT_URL=postgresql://USER:PASSWORD@HOST:5432/DB
+NEXTAUTH_SECRET=your-secret-key-here
+NEXTAUTH_URL=https://your-app.vercel.app
+NODE_ENV=production
+```
+
 ## 🚀 Features
 
 ### Core Features

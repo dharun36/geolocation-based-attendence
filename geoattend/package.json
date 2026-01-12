@@ -8,7 +8,9 @@
     "start": "next start",
     "preview": "next start",
     "postinstall": "prisma generate",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check-env": "node scripts/check-env.js",
+    "vercel-build": "prisma generate && next build"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -44,6 +46,7 @@
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "prisma": "^7.2.0",

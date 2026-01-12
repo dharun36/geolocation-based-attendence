@@ -20,6 +20,9 @@ const eslintConfig = defineConfig([
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_"
       }],
+      "@typescript-eslint/no-empty-interface": "warn",
+      "@typescript-eslint/no-require-imports": "warn",
+      "react/no-unescaped-entities": "off",
     }
   }
 ]);

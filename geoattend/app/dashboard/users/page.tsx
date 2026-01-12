@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { UserPlus, Trash2, Edit } from "lucide-react"
+import { UserFilters } from "@/components/user-filters"
 
 export default async function UsersPage({
   searchParams,
@@ -37,52 +38,7 @@ export default async function UsersPage({
       </div>
 
       {/* Filters */}
-      <Card className="p-4">
-        <div className="flex gap-4 items-center">
-          <div>
-            <label className="text-sm font-medium text-gray-700">Filter by Role</label>
-            <select
-              className="ml-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e) => {
-                const url = new URL(window.location.href)
-                if (e.target.value) {
-                  url.searchParams.set("role", e.target.value)
-                } else {
-                  url.searchParams.delete("role")
-                }
-                window.location.href = url.toString()
-              }}
-              defaultValue={searchParams.role || ""}
-            >
-              <option value="">All Roles</option>
-              <option value="ADMIN">Admin</option>
-              <option value="MANAGER">Manager</option>
-              <option value="EMPLOYEE">Employee</option>
-            </select>
-          </div>
-
-          <div className="flex-1">
-            <label className="text-sm font-medium text-gray-700">Search</label>
-            <input
-              type="text"
-              placeholder="Search by name, email, or employee ID..."
-              className="ml-2 w-full max-w-md px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              defaultValue={searchParams.search || ""}
-              onChange={(e) => {
-                const url = new URL(window.location.href)
-                if (e.target.value) {
-                  url.searchParams.set("search", e.target.value)
-                } else {
-                  url.searchParams.delete("search")
-                }
-                setTimeout(() => {
-                  window.location.href = url.toString()
-                }, 500)
-              }}
-            />
-          </div>
-        </div>
-      </Card>
+      <UserFilters />
 
       {/* Users Table */}
       <Card>
@@ -128,10 +84,10 @@ export default async function UsersPage({
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`px-2 py-1 text-xs font-semibold rounded-full ${u.role === "ADMIN"
-                            ? "bg-purple-100 text-purple-800"
-                            : u.role === "MANAGER"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-100 text-gray-800"
+                          ? "bg-purple-100 text-purple-800"
+                          : u.role === "MANAGER"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-800"
                           }`}
                       >
                         {u.role}

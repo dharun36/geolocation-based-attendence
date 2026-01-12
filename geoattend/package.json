@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "preview": "next start",
+    "postinstall": "prisma generate",
     "lint": "eslint"
   },
   "dependencies": {
